@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'presentation/view/loanding.dart';
+
 void main() {
-  runApp(MiApp());
+  runApp(MyApp());
 }
 
-class MiApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      home: Scaffold(body: Center(child: Image.asset('assets/error.jpg'))),
     );
   }
 }
