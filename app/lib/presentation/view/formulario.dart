@@ -3,9 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/bloc.dart';
 import '../bloc/homeEvent.dart';
+import '../bloc/homeState.dart';
+import '../cubit/cubit.dart';
+import 'LoadingView.dart';
+import 'ErrorView.dart';
+import 'success.dart';
 
 class ViewLogin extends StatelessWidget {
   const ViewLogin({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => HomeBloc(),
+      child: const _LoginContent(),
+    );
+  }
+}
+
+class _LoginContent extends StatelessWidget {
+  const _LoginContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,44 +30,62 @@ class ViewLogin extends StatelessWidget {
     final passController = TextEditingController();
 
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Login"),
-              const SizedBox(height: 10),
-              TextField(
-                controller: userController,
-                decoration: const InputDecoration(
-                  labelText: "Usuario",
+      body: BlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state is Correcto) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider(
+                  create: (_) => PageCubit()..cargarCarro(), // ✅ Cubit inyectado
+                  child: const Home(),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: passController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Contraseña",
-                ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is Cargando) {
+            return const ViewCargando();
+          } else if (state is Error) {
+            return ViewError();
+          }
+
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Login"),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: userController,
+                    decoration: const InputDecoration(labelText: "Usuario"),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: passController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: "Contraseña"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<HomeBloc>().add(
+                            HomeSearchPressed(
+                              userController.text,
+                              passController.text,
+                            ),
+                          );
+                    },
+                    child: const Text("Entrar"),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  final homeBloc = BlocProvider.of<HomeBloc>(context);
-                  homeBloc.add(
-                    HomeSearchPressed(
-                      userController.text,
-                      passController.text,
-                    ),
-                  );
-                },
-                child: const Text("Entrar"),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

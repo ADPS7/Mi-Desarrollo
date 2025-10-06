@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc2/bloc/event.dart';
-import '../bloc2/bloc/page_bloc_bloc.dart';
-import '../bloc2/bloc/states.dart';
+import '../cubit/cubit.dart';
+import '../cubit/states.dart';
 import '../model/infoCarro.dart';
 import 'ErrorView.dart';
 
@@ -13,15 +12,14 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BlocPage()..add(HomeSearchPressed()),
+      create: (_) => PageCubit()..cargarCarro(), // ✅ método directo
       child: Scaffold(
         body: SafeArea(
-          child: Center( // 🔹 Centra todo
+          child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // 🔹 Vertical
-              crossAxisAlignment: CrossAxisAlignment.center, // 🔹 Horizontal
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Imagen cuadrada con borde
                 Container(
                   width: 160,
                   height: 120,
@@ -34,11 +32,8 @@ class Home extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
-                // Contenido dinámico centrado
-                BlocBuilder<BlocPage, Estados>(
+                BlocBuilder<PageCubit, Estados>(
                   builder: (context, state) {
                     if (state is PageLoading) {
                       return const CircularProgressIndicator(color: Colors.red);
@@ -60,7 +55,7 @@ class Home extends StatelessWidget {
                           ],
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center, // 🔹 centrado
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text("🏎️ Marca: ${carro.marca}",
                                 style: const TextStyle(

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../model/infoCarro.dart';
+import '../model/infoCarro.dart';
+
 
 sealed class Estados extends Equatable {
   Estados();

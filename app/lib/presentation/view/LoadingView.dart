@@ -5,12 +5,9 @@ class ViewCargando extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white, // Fondo blanco
-      body: Center(
-        child: CircularProgressIndicator(
-          color: Colors.blue, // Cargando azul
-        ),
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.blue, // Cargando azul
       ),
     );
   }
